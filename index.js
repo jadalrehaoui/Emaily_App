@@ -1,4 +1,5 @@
 const app = require('express')();
+const cors = require('cors');
 const API = require('./api');
 const middlewares = require('./middlewares');
 // env
