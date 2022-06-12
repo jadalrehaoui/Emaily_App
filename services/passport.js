@@ -8,7 +8,6 @@ passport.serializeUser( (user, done) => {
   done(null, user.id)
 })
 passport.deserializeUser( (id, done) => {
-  console.log("ID", id);
   User.findById(id).then(user => { done(null, user)} )
 })
 passport.use(new GoogleStrategy(
@@ -16,7 +15,7 @@ passport.use(new GoogleStrategy(
     {
       clientID: keys.GOOGLE_ClientID,
       clientSecret: keys.GOOGLE_ClientSecret,
-      callbackURL: '/api/auth/google/callback' // same as google API Services callback 
+      callbackURL: '/api/auth/google/callback' // same as google API Services callback
     }, (accessToken, refreshToken, profile, done) => {
       User.findOne({googleID: profile.id}) // async action
       .then(user => {
