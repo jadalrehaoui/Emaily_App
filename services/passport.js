@@ -16,24 +16,20 @@ passport.use(new GoogleStrategy(
       clientID: keys.GOOGLE_ClientID,
       clientSecret: keys.GOOGLE_ClientSecret,
       callbackURL: '/api/auth/google/callback', // same as google API Services callback
-      proxy: true, // to let google trust the proxy in production 
-    }, (accessToken, refreshToken, profile, done) => {
-      User.findOne({googleID: profile.id}) // async action
-      .then(user => {
-        if(!user){
-          new User({
-            googleID: profile.id,
-            name: profile.displayName
-          }).save()
-          .then(user => done(null, user)) // error = null, user = user created
-        } else {
-          done(null, user); // error = null, user = user already existing
-        }
-      })
-      .catch(error => {
-        console.log("✖ Something went wrong, could not fetch user.");
-        console.log(error);
-      })
+      proxy: true, // to let google trust the proxy in production
+    },
+    async (accessToken, refreshToken, profile, done) => {
+      const user = await User.findOne({googleID: profile.id}) // async action
+      if(!user){
+        const user = await new User({
+          googleID: profile.id,
+          name: profile.displayName
+        }).save();
+        return done(null, user) // error = null, user = user created
+      }
+      // else
+      return done(null, user); // error = null, user = user already existing
+
     }
   )
 );

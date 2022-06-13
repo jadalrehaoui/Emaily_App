@@ -8,12 +8,14 @@ router.get('/google',
 }));
 // here is the callback coming from google, passport will know that the user is not trying to authenticate, the user
 // has given us permission and now it's time to resolve BECAUSE the code is in the path
-router.get('/google/callback', passport.authenticate('google'))
+router.get('/google/callback', passport.authenticate('google'), (req, res) => {
+  res.status(200).redirect('/');
+})
 
 // here to log user out, passport is in charge
 router.get('/logout', (req, res, next) => {
   req.logout(); // logging out
-  res.send(req.user); // verifying
+  res.status(200).redirect('/');
 })
 
 // getting the user just to verify
